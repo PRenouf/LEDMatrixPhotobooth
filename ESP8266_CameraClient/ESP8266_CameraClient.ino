@@ -71,18 +71,6 @@ void handleSentVar() {
   server.send(200, "text/html", "Data received");
 }
 
-void takePhoto() {
-  digitalWrite(TriggerLED, HIGH);
-  count(3, false); //Count down 3,2,1
-  flash();
-  digitalWrite(shutter, HIGH);
-  Serial.println("trigger active");
-  delay(150);
-  digitalWrite(shutter, LOW);
-  Serial.println("trigger off");
-  digitalWrite(TriggerLED, LOW);
-}
-
 
 void setup() {
   Serial.begin(9600);
@@ -143,140 +131,76 @@ void loop() {
 
 
 ///
-
-#define FONT_NUMER_STYLE_STND_
-
 unsigned long startTime = 0;
 unsigned long currentTime = 0;
 
-
-void flash() {
-  for (int x = 1; x < 9; x++) {
-    for (int y = 1; y < 9; y++) {
-      drawSquare(x, y);
-    }
-  }
-  FastLED.show();
-  delay(10);
-}
   
 void takePhoto(){
   startTime = millis();
 
+  Serial.print("\t Counting... 3...");
   while(currentTime < startTime + 1000){
-    createFrame(ms, false);
+    createFrame(currentTime, false);
     drawBigThree();
         FastLED.show();
     delay(10);
     currentTime = millis();
   }
 
+  Serial.print(" 2...");
   while(currentTime < startTime + 2000){
-    createFrame(ms, false);
+    createFrame(currentTime, false);
     drawBigTwo();
         FastLED.show();
     delay(10);
     currentTime = millis();
   }
 
+  Serial.print(" 1...");
   while(currentTime < startTime + 3000){
-    createFrame(ms, false);
+    createFrame(currentTime, false);
     drawBigOne();
         FastLED.show();
     delay(10);
     currentTime = millis();
   }
 
-  flash();
+  Serial.print(" ...SMILE");
+  createFrame(currentTime, false);
+  smile();
+  FastLED.show();
+  delay(10);
+  digitalWrite(focus, HIGH);
+  delay(200);
+  digitalWrite(focus, LOW);
+  digitalWrite(shutter, HIGH);
+  delay(200);
+  digitalWrite(shutter, LOW);
+  delay(100);
+
+  Serial.println("  ... Photo taken!");
 }
 
+void smile(){
+  drawSquare(2,2);
+  drawSquare(3,2);
+  drawSquare(6,2);
+  drawSquare(7,2);
+  drawSquare(2,3);
+  drawSquare(3,3);
+  drawSquare(6,3);
+  drawSquare(7,3);
 
-
-#ifdef FONT_NUMER_STYLE_STND
-// Function to convert letter coordinates into 4x4 squares on matrix
-void drawSquare(uint8_t x, uint8_t y) {
-  leds[ XY( (2 * x) - 1, (2 * y) - 1)] = CHSV( 0, 0, 255);
-  leds[ XY( (2 * x) - 1, (2 * y))]   = CHSV( 0, 0, 255);
-  leds[ XY( (2 * x)   , (2 * y) - 1)] = CHSV( 0, 0, 255);
-  leds[ XY( (2 * x)   , (2 * y))] = CHSV( 0, 0, 255);
+  drawSquare(1,5);
+  drawSquare(2,6);
+  drawSquare(3,7);
+  drawSquare(4,7);
+  drawSquare(5,7);
+  drawSquare(6,7);
+  drawSquare(7,6);
+  drawSquare(8,5);
 }
 
-void drawBigZero() {
-  Serial.println("Showing 0...");
-  drawSquare(3, 1);
-  drawSquare(4, 1);
-  drawSquare(5, 1);
-  drawSquare(2, 2);
-  drawSquare(6, 2);
-  drawSquare(2, 3);
-  drawSquare(6, 3);
-  drawSquare(2, 4);
-  drawSquare(6, 4);
-  drawSquare(2, 5);
-  drawSquare(6, 5);
-  drawSquare(2, 6);
-  drawSquare(6, 6);
-  drawSquare(3, 7);
-  drawSquare(4, 7);
-  drawSquare(5, 7);
-}
-
-void drawBigOne() {
-  Serial.println("Showing 1...");
-  drawSquare(4, 1);
-  drawSquare(6, 2);
-  drawSquare(5, 2);
-  drawSquare(4, 2);
-  drawSquare(4, 3);
-  drawSquare(4, 4);
-  drawSquare(4, 5);
-  drawSquare(4, 6);
-  drawSquare(2, 7);
-  drawSquare(3, 7);
-  drawSquare(4, 7);
-  drawSquare(5, 7);
-  drawSquare(6, 7);
-}
-
-void drawBigTwo() {
-  Serial.println("Showing 2...");
-  drawSquare(5, 1);
-  drawSquare(4, 1);
-  drawSquare(3, 1);
-  drawSquare(6, 2);
-  drawSquare(2, 2);
-  drawSquare(3, 3);
-  drawSquare(4, 4);
-  drawSquare(5, 5);
-  drawSquare(6, 6);
-  drawSquare(6, 7);
-  drawSquare(5, 7);
-  drawSquare(4, 7);
-  drawSquare(3, 7);
-  drawSquare(2, 7);
-}
-
-void drawBigThree() {
-  Serial.println("Showing 3...");
-  drawSquare(5, 1);
-  drawSquare(4, 1);
-  drawSquare(3, 1);
-  drawSquare(6, 2);
-  drawSquare(2, 2);
-  drawSquare(2, 3);
-  drawSquare(4, 4);
-  drawSquare(3, 4);
-  drawSquare(2, 5);
-  drawSquare(2, 6);
-  drawSquare(6, 6);
-  drawSquare(5, 7);
-  drawSquare(4, 7);
-  drawSquare(3, 7);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////
-#else
-// Function to convert letter coordinates into 4x4 squares on matrix
 void drawSquare(uint8_t x, uint8_t y) {
   leds[ XY( (2 * x) - 2, (2 * y) - 1)] = CHSV( 0, 0, 255);
   leds[ XY( (2 * x) - 2, (2 * y))]   = CHSV( 0, 0, 255);
@@ -385,7 +309,6 @@ void drawBigThree() {
   drawSquare(3, 7);
 }
 
-#endif
 
 // Small Numbers
 
