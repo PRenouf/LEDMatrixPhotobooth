@@ -49,23 +49,23 @@ void handleSentVar() {
   {
     return;
   }
-
+  
   JsonObject& root = jsonBuffer.parseObject(sensor_values);
   command = root["sensor1_reading"].as<int>();
   Serial.print("   Command: ");
   Serial.print(command);
   Serial.println(root["sensor1_reading"].as<int>());
-
+  
   // IDLE Mode - Flash LED
-  if (command == 0) {
+  if(command == 0){
     //Toggle the state of the LED
-    if (currentMillis > previousMillis + 500) {
+    if (currentMillis > previousMillis + 500){
       digitalWrite(IndicatorLED, !digitalRead(IndicatorLED));
       previousMillis = currentMillis;
     }
   }
-  else if (command == 1) {
-    takePhoto();
+  else if(command == 1){
+    takePhoto();    
   }
 
   server.send(200, "text/html", "Data received");
@@ -73,13 +73,17 @@ void handleSentVar() {
 
 
 void setup() {
+  digitalWrite(16, HIGH);
+  pinMode(16, OUTPUT);
+  digitalWrite(16, HIGH);
+  
   Serial.begin(9600);
 
   Serial.println();
   Serial.println("Booting.... ");
   Serial.print(ssid);
-  //WiFi.softAP(ssid, password);
- // IPAddress myIP = WiFi.softAPIP();
+  WiFi.softAP(ssid, password);
+  IPAddress myIP = WiFi.softAPIP();
 
   pinMode(IndicatorLED, OUTPUT);
   pinMode(TriggerLED, OUTPUT);
@@ -93,25 +97,14 @@ void setup() {
   FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
   //FastLED.setBrightness( BRIGHTNESS );
 
-  uint32_t ST = millis();
-  uint32_t ms = 0;
-  while (ms < ST + 5000) {
-    ms = millis();
-    createFrame(ms, true);
-    drawSmallZero(5);
-    drawSmallZero(6);
-    FastLED.show();
-    delay(10);
-  }
-
-  //server.on("/data/", HTTP_GET, handleSentVar); // when the server receives a request with /data/ in the string then run the handleSentVar function
-  //server.begin();
+  server.on("/data/", HTTP_GET, handleSentVar); // when the server receives a request with /data/ in the string then run the handleSentVar function
+  server.begin();
 
   Serial.println("Setup Complete.");
 }
 
 void loop() {
-  //server.handleClient();
+  server.handleClient();
   
   currentLEDUpdate = millis();
   if(currentLEDUpdate > prevLEDUpdate + 500){
@@ -123,7 +116,7 @@ void loop() {
     delay(10);
   }
   
-  takePhoto();
+  //takePhoto();
   if (digitalRead(13) == LOW) {
     takePhoto();
   }
@@ -136,6 +129,8 @@ unsigned long currentTime = 0;
 
   
 void takePhoto(){
+  digitalWrite(TriggerLED, HIGH);
+  
   startTime = millis();
 
   Serial.print("\t Counting... 3...");
@@ -179,6 +174,8 @@ void takePhoto(){
   delay(100);
 
   Serial.println("  ... Photo taken!");
+  digitalWrite(TriggerLED, LOW);
+  digitalWrite(16, LOW);
 }
 
 void smile(){

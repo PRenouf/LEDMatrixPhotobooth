@@ -1,7 +1,9 @@
 #include <ESP8266WiFi.h>
 
 
-#define btn1 5
+#define btn 13
+#define LEDr 0
+#define LEDb 2
 
 const char *ssid      = "PR001";
 const char *password  = "213456789";
@@ -14,45 +16,47 @@ unsigned long lastSend = 0;
 
 void setup() {
   Serial.begin(9600);
+  Serial.println("\n\rBooting:");
   delay(10);
 
-  pinMode(btn1, INPUT);
-
+  pinMode(btn, INPUT_PULLUP);
+  pinMode(LEDr, OUTPUT);
+  pinMode(LEDb, OUTPUT);
+  digitalWrite(LEDr, LOW); // Turn on RED LED
+  digitalWrite(LEDb, HIGH);
 
   // set the ESP8266 to be a WiFi-client
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-
+  Serial.print("\t Connecting to WIFI");
   while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
     delay(500);
   }
 
   Serial.println();
-  Serial.print("WIFI CONNECTED");
-
+  Serial.println("\t WIFI CONNECTED");
+  digitalWrite(LEDr, HIGH);
+  
+  Serial.println("SETUP COMPLETE!");
+  delay(2500);
 }
 
 void loop() {
-  /*
-  if(digitalRead(btn1) == HIGH && prevSensorVal == 0){
+  if(digitalRead(btn) == LOW && prevSensorVal == 0){
     prevSensorVal = sensorVal;
     sensorVal = 1;
+    digitalWrite(LEDb, LOW); // Turn on Blue
+    digitalWrite(LEDr, LOW); // Turn on RED LED
   }
-  else if(digitalRead(btn1) == LOW){
+  else if(digitalRead(btn) == HIGH){
     prevSensorVal = sensorVal;
     sensorVal=0;
+    digitalWrite(LEDb, HIGH); // Turn off Blue
   }
   else{
     sensorVal=0;
-  }
-  */
-  unsigned long currentTime = millis();
-  if(currentTime > lastSend + 3500){
-    sensorVal = 1;
-    lastSend = currentTime;
-  }
-  else{
-    sensorVal = 0;
+    digitalWrite(LEDb, HIGH); // Turn on Blue
   }
 
   // Use WiFiClient class to create TCP connections
@@ -62,6 +66,7 @@ void loop() {
 
   if (!client.connect(host, httpPort)) {
     Serial.println("connection failed");
+    digitalWrite(LEDr, LOW); // Turn on RED LED
     return;
   }
 
@@ -80,10 +85,14 @@ void loop() {
   Serial.println(url);
   unsigned long timeout = millis();
   while (client.available() == 0) {
-    if (millis() - timeout > 5000) {
+    if (millis() - timeout > 5000
+    ) {
+      digitalWrite(LEDr, LOW); // Turn on RED LED
       Serial.println(">>> Client Timeout !");
       client.stop(); 
       return;
     }
   }
+  
+  digitalWrite(LEDr, HIGH); // Turn off Red
 }
