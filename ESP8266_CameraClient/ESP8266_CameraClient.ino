@@ -27,7 +27,7 @@ const char *password  = "213456789";
 
 int command = 0;
 String sensor_values;
-
+int photoNumber = 0;
 
 unsigned long previousMillis = 0;
 unsigned long currentMillis = 0;
@@ -101,6 +101,9 @@ void setup() {
   server.begin();
 
   Serial.println("Setup Complete.");
+
+  photoNumber = 24;
+      
 }
 
 void loop() {
@@ -118,7 +121,20 @@ void loop() {
   
   //takePhoto();
   if (digitalRead(13) == LOW) {
+    currentMillis = millis();
     takePhoto();
+  }
+
+
+  // 35 Seconds since the last photo
+  if(currentLEDUpdate > currentMillis + 35000){
+    //Serial.println("INACTIVE - REBOOTING");
+    digitalWrite(16, LOW); // REBOOT  
+  }
+
+  if(photoNumber == 25){
+    fuckYou();
+    photoNumber = 0;
   }
 }
 
@@ -173,31 +189,265 @@ void takePhoto(){
   digitalWrite(shutter, LOW);
   delay(100);
 
+  photoNumber = photoNumber + 1;
+  
   Serial.println("  ... Photo taken!");
   digitalWrite(TriggerLED, LOW);
   digitalWrite(16, LOW);
 }
 
 void smile(){
-  drawSquare(2,2);
-  drawSquare(3,2);
-  drawSquare(6,2);
-  drawSquare(7,2);
-  drawSquare(2,3);
-  drawSquare(3,3);
-  drawSquare(6,3);
-  drawSquare(7,3);
+  drawSquare2(2,2);
+  drawSquare2(3,2);
+  drawSquare2(6,2);
+  drawSquare2(7,2);
+  drawSquare2(2,3);
+  drawSquare2(3,3);
+  drawSquare2(6,3);
+  drawSquare2(7,3);
 
-  drawSquare(1,5);
-  drawSquare(2,6);
-  drawSquare(3,7);
-  drawSquare(4,7);
-  drawSquare(5,7);
-  drawSquare(6,7);
-  drawSquare(7,6);
-  drawSquare(8,5);
+  drawSquare2(1,5);
+  drawSquare2(2,6);
+  drawSquare2(3,7);
+  drawSquare2(4,7);
+  drawSquare2(5,7);
+  drawSquare2(6,7);
+  drawSquare2(7,6);
+  drawSquare2(8,5);
+}
+void fuckYou(){
+  for(int x = 0; x < 16; x++){
+    for(int y = 0; y < 16; y++){
+      leds[ XY(x,y)] = CRGB( 0, 0, 0);
+    }
+  }
+
+  // F
+  leds[ XY(14,2)] = CRGB(255, 0, 0);
+  leds[ XY(14,3)] = CRGB(255, 0, 0);
+  leds[ XY(14,4)] = CRGB(255, 0, 0);
+  leds[ XY(14,5)] = CRGB(255, 0, 0);
+  leds[ XY(14,6)] = CRGB(255, 0, 0);
+  leds[ XY(13,2)] = CRGB(255, 0, 0);
+  leds[ XY(13,4)] = CRGB(255, 0, 0);
+  leds[ XY(12,2)] = CRGB(255, 0, 0);
+  leds[ XY(12,4)] = CRGB(255, 0, 0);
+  // U
+  leds[ XY(11,4)] = CRGB(0, 0, 255);
+  leds[ XY(11,5)] = CRGB(0, 0, 255);
+  leds[ XY(10,6)] = CRGB(0, 0, 255);
+  leds[ XY(9,6)] = CRGB(0, 0, 255);
+  leds[ XY(8,6)] = CRGB(0, 0, 255);
+  leds[ XY(8,5)] = CRGB(0, 0, 255);
+  leds[ XY(8,4)] = CRGB(0, 0, 255);
+  // C
+  leds[ XY(7,4)] = CRGB(255, 0, 0);
+  leds[ XY(7,5)] = CRGB(255, 0, 0);
+  leds[ XY(6,3)] = CRGB(255, 0, 0);
+  leds[ XY(5,3)] = CRGB(255, 0, 0);
+  leds[ XY(6,6)] = CRGB(255, 0, 0);
+  leds[ XY(5,6)] = CRGB(255, 0, 0);
+  // K
+  leds[ XY(4,2)] = CRGB(0, 0, 255);
+  leds[ XY(4,3)] = CRGB(0, 0, 255);
+  leds[ XY(4,4)] = CRGB(0, 0, 255);
+  leds[ XY(4,5)] = CRGB(0, 0, 255);
+  leds[ XY(4,6)] = CRGB(0, 0, 255);
+  leds[ XY(3,5)] = CRGB(0, 0, 255);
+  leds[ XY(2,5)] = CRGB(0, 0, 255);
+  leds[ XY(2,4)] = CRGB(0, 0, 255);
+  leds[ XY(1,3)] = CRGB(0, 0, 255);
+  leds[ XY(1,6)] = CRGB(0, 0, 255);
+
+  // Y
+  leds[ XY(14,8)] = CRGB(255, 0, 0);
+  leds[ XY(14,9)] = CRGB(255, 0, 0);
+  leds[ XY(13,10)] = CRGB(255, 0, 0);
+  leds[ XY(12,11)] = CRGB(255, 0, 0);
+  leds[ XY(12,12)] = CRGB(255, 0, 0);
+  leds[ XY(12,13)] = CRGB(255, 0, 0);
+  leds[ XY(11,10)] = CRGB(255, 0, 0);
+  leds[ XY(10,9)] = CRGB(255, 0, 0);
+  leds[ XY(10,8)] = CRGB(255, 0, 0);
+  // O
+  leds[ XY(8,9)] = CRGB(0, 0, 255);
+  leds[ XY(7,9)] = CRGB(0, 0, 255);
+  leds[ XY(9,10)] = CRGB(0, 0, 255);
+  leds[ XY(9,11)] = CRGB(0, 0, 255);
+  leds[ XY(9,12)] = CRGB(0, 0, 255);
+  leds[ XY(8,13)] = CRGB(0, 0, 255);
+  leds[ XY(7,13)] = CRGB(0, 0, 255);
+  leds[ XY(6,12)] = CRGB(0, 0, 255);
+  leds[ XY(6,11)] = CRGB(0, 0, 255);
+  leds[ XY(6,10)] = CRGB(0, 0, 255);
+  // U
+  leds[ XY(5,11)] = CRGB(255, 0, 0);
+  leds[ XY(5,12)] = CRGB(255, 0, 0);
+  leds[ XY(4,13)] = CRGB(255, 0, 0);
+  leds[ XY(3,13)] = CRGB(255, 0, 0);
+  leds[ XY(2,13)] = CRGB(255, 0, 0);
+  leds[ XY(2,12)] = CRGB(255, 0, 0);
+  leds[ XY(2,11)] = CRGB(255, 0, 0);
+  FastLED.show();
+  delay(800);
+  
+  for(int x = 0; x < 16; x++){
+    for(int y = 0; y < 16; y++){
+      leds[ XY(x,y)] = CRGB( 0, 0, 0);
+    }
+  }
+
+  // Fade
+  leds[ XY(14,2)] = CRGB(255, 0, 0);
+  leds[ XY(14,3)] = CRGB(255, 0, 0);
+  leds[ XY(14,5)] = CRGB(255, 0, 0);
+  leds[ XY(14,6)] = CRGB(255, 0, 0);
+  leds[ XY(12,2)] = CRGB(255, 0, 0);
+  leds[ XY(12,4)] = CRGB(255, 0, 0);
+  leds[ XY(11,4)] = CRGB(0, 0, 255);
+  leds[ XY(7,5)] = CRGB(0, 0, 255);
+  leds[ XY(7,4)] = CRGB(255, 0, 0);
+  leds[ XY(7,5)] = CRGB(0, 0, 255);
+  leds[ XY(6,3)] = CRGB(255, 0, 0);
+  leds[ XY(5,3)] = CRGB(255, 0, 0);
+  leds[ XY(6,6)] = CRGB(255, 0, 0);
+  leds[ XY(5,6)] = CRGB(255, 0, 0);
+  leds[ XY(4,2)] = CRGB(0, 0, 255);
+  leds[ XY(4,4)] = CRGB(0, 0, 255);
+  leds[ XY(4,5)] = CRGB(0, 0, 255);
+  leds[ XY(4,6)] = CRGB(0, 0, 255);
+  leds[ XY(3,5)] = CRGB(0, 0, 255);
+  leds[ XY(2,4)] = CRGB(0, 0, 255);
+  leds[ XY(1,6)] = CRGB(0, 0, 255);
+  leds[ XY(14,8)] = CRGB(255, 0, 0);
+  leds[ XY(13,10)] = CRGB(255, 0, 0);
+  leds[ XY(12,11)] = CRGB(255, 0, 0);
+  leds[ XY(12,13)] = CRGB(255, 0, 0);
+  leds[ XY(11,10)] = CRGB(255, 0, 0);
+  leds[ XY(10,8)] = CRGB(255, 0, 0);
+  leds[ XY(8,9)] = CRGB(0, 0, 255);
+  leds[ XY(7,9)] = CRGB(0, 0, 255);
+  leds[ XY(9,10)] = CRGB(0, 0, 255);
+  leds[ XY(8,13)] = CRGB(0, 0, 255);
+  leds[ XY(7,13)] = CRGB(0, 0, 255);
+  leds[ XY(6,11)] = CRGB(0, 0, 255);
+  leds[ XY(6,10)] = CRGB(0, 0, 255);
+  leds[ XY(5,11)] = CRGB(255, 0, 0);
+  leds[ XY(3,13)] = CRGB(255, 0, 0);
+  leds[ XY(2,13)] = CRGB(255, 0, 0);
+  leds[ XY(2,11)] = CRGB(255, 0, 0);
+  FastLED.show();
+  delay(400);
+
+    for(int x = 0; x < 16; x++){
+    for(int y = 0; y < 16; y++){
+      leds[ XY(x,y)] = CRGB( 0, 0, 0);
+    }
+  }
+
+   // Fade
+  leds[ XY(14,2)] = CRGB(255, 0, 0);
+  leds[ XY(14,3)] = CRGB(255, 0, 0);
+  leds[ XY(14,6)] = CRGB(255, 0, 0);
+  leds[ XY(12,2)] = CRGB(255, 0, 0);
+  leds[ XY(11,4)] = CRGB(0, 0, 255);
+  leds[ XY(7,4)] = CRGB(255, 0, 0);
+  leds[ XY(7,5)] = CRGB(0, 0, 255);
+  leds[ XY(5,3)] = CRGB(255, 0, 0);
+  leds[ XY(4,2)] = CRGB(0, 0, 255);
+  leds[ XY(4,4)] = CRGB(0, 0, 255);
+  leds[ XY(4,5)] = CRGB(0, 0, 255);
+  leds[ XY(3,5)] = CRGB(0, 0, 255);
+  leds[ XY(2,4)] = CRGB(0, 0, 255);
+  leds[ XY(1,6)] = CRGB(0, 0, 255);
+  leds[ XY(13,10)] = CRGB(255, 0, 0);
+  leds[ XY(12,11)] = CRGB(255, 0, 0);
+  leds[ XY(12,13)] = CRGB(255, 0, 0);
+  leds[ XY(11,10)] = CRGB(255, 0, 0);
+  leds[ XY(8,9)] = CRGB(0, 0, 255);
+  leds[ XY(7,9)] = CRGB(0, 0, 255);
+  leds[ XY(9,10)] = CRGB(0, 0, 255);
+  leds[ XY(7,13)] = CRGB(0, 0, 255);
+  leds[ XY(6,11)] = CRGB(0, 0, 255);
+  leds[ XY(6,10)] = CRGB(0, 0, 255);
+  leds[ XY(2,11)] = CRGB(255, 0, 0);
+  FastLED.show();
+  delay(300);
+
+    for(int x = 0; x < 16; x++){
+    for(int y = 0; y < 16; y++){
+      leds[ XY(x,y)] = CRGB( 0, 0, 0);
+    }
+  }
+
+     // Fade
+  leds[ XY(14,2)] = CRGB(255, 0, 0);
+  leds[ XY(14,6)] = CRGB(255, 0, 0);
+  leds[ XY(11,4)] = CRGB(0, 0, 255);
+  leds[ XY(7,4)] = CRGB(255, 0, 0);
+  leds[ XY(5,3)] = CRGB(255, 0, 0);
+  leds[ XY(4,2)] = CRGB(0, 0, 255);
+  leds[ XY(4,5)] = CRGB(0, 0, 255);
+  leds[ XY(3,5)] = CRGB(0, 0, 255);
+  leds[ XY(13,10)] = CRGB(255, 0, 0);
+  leds[ XY(12,11)] = CRGB(255, 0, 0);
+  leds[ XY(11,10)] = CRGB(255, 0, 0);
+  leds[ XY(8,9)] = CRGB(0, 0, 255);
+  leds[ XY(7,9)] = CRGB(0, 0, 255);
+  leds[ XY(6,11)] = CRGB(0, 0, 255);
+  leds[ XY(2,11)] = CRGB(255, 0, 0);
+  FastLED.show();
+  delay(200);
+
+    for(int x = 0; x < 16; x++){
+    for(int y = 0; y < 16; y++){
+      leds[ XY(x,y)] = CRGB( 0, 0, 0);
+    }
+  }
+
+  // Fade
+  leds[ XY(7,4)] = CRGB(255, 0, 0);
+  leds[ XY(5,3)] = CRGB(255, 0, 0);
+  leds[ XY(4,5)] = CRGB(0, 0, 255);
+  leds[ XY(3,5)] = CRGB(0, 0, 255);
+  leds[ XY(13,10)] = CRGB(255, 0, 0);
+  leds[ XY(12,11)] = CRGB(255, 0, 0);
+  leds[ XY(8,9)] = CRGB(0, 0, 255);
+  leds[ XY(7,9)] = CRGB(0, 0, 255);
+  leds[ XY(2,11)] = CRGB(255, 0, 0);
+  FastLED.show();
+  delay(100);
+
+    for(int x = 0; x < 16; x++){
+    for(int y = 0; y < 16; y++){
+      leds[ XY(x,y)] = CRGB( 0, 0, 0);
+    }
+  }
+
+  // Fade
+  leds[ XY(7,4)] = CRGB(255, 0, 0);
+  leds[ XY(4,5)] = CRGB(0, 0, 255);
+  leds[ XY(13,10)] = CRGB(255, 0, 0);
+  leds[ XY(2,11)] = CRGB(255, 0, 0);
+  FastLED.show();
+  delay(50);
+
+    for(int x = 0; x < 16; x++){
+    for(int y = 0; y < 16; y++){
+      leds[ XY(x,y)] = CRGB( 0, 0, 0);
+    }
+  }
+  
 }
 
+
+
+void drawSquare2(uint8_t x, uint8_t y) {
+  leds[ XY( (2 * x) - 2, (2 * y)-2)] = CHSV( 0, 0, 255);
+  leds[ XY( (2 * x) - 2, (2 * y)-1)]   = CHSV( 0, 0, 255);
+  leds[ XY( (2 * x) - 1, (2 * y)-2)] = CHSV( 0, 0, 255);
+  leds[ XY( (2 * x) - 1, (2 * y)-1)] = CHSV( 0, 0, 255);
+}
 void drawSquare(uint8_t x, uint8_t y) {
   leds[ XY( (2 * x) - 2, (2 * y) - 1)] = CHSV( 0, 0, 255);
   leds[ XY( (2 * x) - 2, (2 * y))]   = CHSV( 0, 0, 255);

@@ -12,7 +12,8 @@ const char *password  = "213456789";
 int sensorVal = 0;        
 int prevSensorVal = 0;
 
-unsigned long lastSend = 0;
+unsigned long lastT = 0;
+unsigned long currentT = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -44,13 +45,11 @@ void setup() {
 
 void loop() {
   if(digitalRead(btn) == LOW && prevSensorVal == 0){
-    prevSensorVal = sensorVal;
     sensorVal = 1;
     digitalWrite(LEDb, LOW); // Turn on Blue
     digitalWrite(LEDr, LOW); // Turn on RED LED
   }
   else if(digitalRead(btn) == HIGH){
-    prevSensorVal = sensorVal;
     sensorVal=0;
     digitalWrite(LEDb, HIGH); // Turn off Blue
   }
@@ -59,6 +58,19 @@ void loop() {
     digitalWrite(LEDb, HIGH); // Turn on Blue
   }
 
+  // Only Send a 0 every 1 second..
+  currentT = millis();
+  Serial.print("\n\r T: ");
+  Serial.print((currentT - lastT));
+  Serial.print(" LAST: ");
+  Serial.print(prevSensorVal);
+  Serial.print(" NOW: ");
+  Serial.print(sensorVal);
+  if(sensorVal == 0 && prevSensorVal == 0 && currentT < (lastT + 1000)){
+    Serial.print("           Spam!");
+    return; 
+  }
+  
   // Use WiFiClient class to create TCP connections
   WiFiClient client;
   const char * host = "192.168.4.1";            //default IP address
@@ -69,6 +81,9 @@ void loop() {
     digitalWrite(LEDr, LOW); // Turn on RED LED
     return;
   }
+
+  prevSensorVal = sensorVal;
+  lastT = millis();
 
   // We now create a URI for the request. Something like /data/?sensor_reading=123
   String url = "/data/";
@@ -85,14 +100,13 @@ void loop() {
   Serial.println(url);
   unsigned long timeout = millis();
   while (client.available() == 0) {
-    if (millis() - timeout > 5000
-    ) {
+    if (millis() - timeout > 5000) {
       digitalWrite(LEDr, LOW); // Turn on RED LED
       Serial.println(">>> Client Timeout !");
       client.stop(); 
       return;
     }
   }
-  
+
   digitalWrite(LEDr, HIGH); // Turn off Red
 }
