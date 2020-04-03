@@ -7,6 +7,9 @@ A microcontroller, connected to the LED Matrix, triggers the camera by connectin
 
 The remote trigger communicates with the main microcontroller by connecting to its local AP and sending HTML requests. Although alternative communication over BLE or 433MHz RF would have perhaps been better, microcontrollers supporting WIFI were easily available. The chosen microcontroller comes complete with battery management systems for the 18650-cell powering the device.
 
+<br/>
+<br/>
+
 ## The Hub – Main Microcontroller
 The main microcontroller, an ESP8266 based WEMIS D1 MINI, is configured as a local-AP and hosts a webserver.
 During operation the microcontroller displays a flashing animation. When taking a photo, the numbers 3,2,1 followed by a smiley faced are overlaid onto the matrix.
@@ -21,7 +24,11 @@ The exact protocol used to trigger the camera may depend on brand and model – 
 When using a double ended headphone, the wire from the bottom ring is connected to the sleeve.
 
 ### Schematic
-![Schematic](/Images/MatrixSch.jpg)
+![Schematic](/Images/Schematic.JPG)
+
+
+<br/>
+<br/>
 
 ## Remote Trigger - Secondary Microcontroller
 ![Schematic](/Images/Trigger2.jpg)
