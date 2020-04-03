@@ -21,7 +21,7 @@ When using a double ended headphone, the wire from the bottom ring is connected 
 ### Schematic
 ![Schematic](/Images/MatrixSch.jpg)
 
-## Remote Trigger
+## Remote Trigger - Secondary Microcontroller
 ![Schematic](/Images/Trigger2.jpg)
 
 The remote trigger is Adafruit feather HUZZAH ESP8266, it connects to the AP provided by the HUB, illuminating a red LED is there is a problem. Every 1 second a HTML request is sent to the server alerting it that the trigger is in range and connected, on a button press a different request is sent and the Hub is asked to take a photo. 
