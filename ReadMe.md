@@ -11,6 +11,8 @@ The remote trigger communicates with the main microcontroller by connecting to i
 The main microcontroller, an ESP8266 based WEMIS D1 MINI, is configured as a local-AP and hosts a webserver.
 During operation the microcontroller displays a flashing animation. When taking a photo, the numbers 3,2,1 followed by a smiley faced are overlaid onto the matrix.
 
+![ExampleNumber](/Images/ExampleNumber.jpg)
+
 ###  Triggering Protocol
 To avoid damaging the DSLR Camera there is no electrical connection between the main microcontroller and camera trigger wire. Signals are transferred utilising optocouplers.
 The exact protocol used to trigger the camera may depend on brand and model – for Cannon cameras and this instance:
